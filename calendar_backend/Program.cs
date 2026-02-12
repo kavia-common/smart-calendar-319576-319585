@@ -88,6 +88,20 @@ app.UseSwaggerUi(config =>
     config.Path = "/docs";
 });
 
+// Best-effort: also persist the OpenAPI document to a local file for tooling that expects it.
+try
+{
+    var doc = await app.Services.GetRequiredService<NSwag.AspNetCore.OpenApiDocumentProvider>()
+        .GenerateAsync(app.Services);
+    var json = doc.ToJson();
+    var outPath = Path.Combine(AppContext.BaseDirectory, "openapi.json");
+    await File.WriteAllTextAsync(outPath, json);
+}
+catch
+{
+    // Non-fatal: runtime swagger still works at /swagger/v1/swagger.json (NSwag pipeline) and /docs UI.
+}
+
 // Health check endpoint
 app.MapGet("/", () => new { message = "Healthy" })
     .WithSummary("Health check")
