@@ -1,0 +1,4 @@
+{
+    "command": "dotnet run --urls \"http://<host>:<port>\"",
+    "working_directory": "/home/kavia/workspace/code-generation/smart-calendar-319576-319585/calendar_backend"
+}
